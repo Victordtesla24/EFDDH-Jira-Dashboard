@@ -1,0 +1,82 @@
+/* Dashboard styling */
+.stApp {
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: #FFFFFF;
+}
+
+/* Metrics styling */
+div.css-1r6slb0.e1tzin5v2 {
+    background-color: #F8F9FA;
+    border: 1px solid #E1E4E8;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+}
+
+/* Chart containers */
+div.css-1r6slb0.e1tzin5v2 {
+    margin-bottom: 2rem;
+}
+
+/* Headers */
+h1, h2, h3 {
+    color: #2C3E50;
+    font-weight: 600;
+}
+
+/* Error messages */
+div.stAlert {
+    border-radius: 0.5rem;
+    border: none;
+}
+
+/* Success messages */
+div.stSuccess {
+    background-color: #D5F5E3;
+    color: #196F3D;
+}
+
+/* Warning messages */
+div.stWarning {
+    background-color: #FCF3CF;
+    color: #9A7D0A;
+}
+
+/* Error messages */
+div.stError {
+    background-color: #FADBD8;
+    color: #943126;
+}
+
+/* Metric values */
+div.css-1l269bu.e1tzin5v1 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #2980B9;
+}
+
+/* Filter containers */
+.filter-container {
+    background-color: #F8F9FA;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid #E1E4E8;
+}
+
+/* Filter labels */
+.filter-label {
+    color: #2C3E50;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+/* Tooltips */
+.tooltip {
+    background-color: #FFFFFF;
+    border: 1px solid #E1E4E8;
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
