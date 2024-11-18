@@ -5,7 +5,7 @@ from src.utils.data_processor import load_data
 from src.services.jira import JiraService
 from src.visualizations import create_program_overview
 from src.utils.logger import logger
-from src.components.visualizations import create_program_charts
+from src.visualizations import create_program_charts
 from typing import Optional, Dict, List
 
 def render_program_overview() -> None:
