@@ -1,0 +1,26 @@
+[MASTER]
+py-version = 3.13
+ignore=CVS,tests
+persistent=yes
+load-plugins=
+
+[MESSAGES CONTROL]
+disable=
+    C0111, # missing-docstring
+    C0103, # invalid-name
+    R0903, # too-few-public-methods
+    W0621, # redefined-outer-name
+    R0913, # too-many-arguments
+    W0718, # broad-except
+    W1203, # logging-fstring-interpolation
+    R1735   # use-dict-literal
+
+[FORMAT]
+max-line-length=120
+indent-string='    '
+
+[BASIC]
+good-names=i,j,k,ex,Run,_,df
+
+[TYPECHECK]
+ignored-modules=numpy,pandas,plotly

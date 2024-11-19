@@ -1,31 +1,25 @@
+"""Main Streamlit application."""
 import streamlit as st
+from src.utils.logger import logger
 from src.utils.data_processor import DataProcessor
-from src.utils.error_handler import ErrorHandler
-from src.utils.logger import setup_logger
+from src.visualizations.program_charts import Visualizer
 
-def main():
-    st.set_page_config(
-        page_title="EFDDH Dashboard",
-        page_icon="📊",
-        layout="wide"
-    )
-    
-    logger = setup_logger()
-    
+def main() -> None:
+    """Main application entry point."""
     try:
-        # Load and process data
-        data_processor = DataProcessor()
-        df = data_processor.load_data()
+        st.set_page_config(
+            page_title="Jira Dashboard",
+            page_icon="📊",
+            layout="wide"
+        )
         
-        # Display main dashboard
-        st.title("EFDDH Agile Coaching Metrics Dashboard")
+        logger.info("Starting Jira Dashboard application")
         
-        return df
+        # Rest of your Streamlit app code...
         
     except Exception as e:
-        logger.error(f"Error loading data: {str(e)}")
-        st.error("Unable to load dashboard data. Please check the data file and try again.")
-        return None
+        logger.error(f"Application error: {str(e)}", exc_info=True)
+        st.error("An error occurred. Please check the logs for details.")
 
 if __name__ == "__main__":
     main() 

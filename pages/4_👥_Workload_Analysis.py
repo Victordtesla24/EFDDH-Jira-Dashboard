@@ -3,6 +3,17 @@ import plotly.express as px
 from src.utils.logger import logger
 from src.utils.data_processor import process_workload_data
 from Home import load_data
+from contextlib import contextmanager
+
+class ErrorHandler:
+    @contextmanager
+    def handle_operation(self, operation_name):
+        try:
+            yield
+        except Exception as e:
+            logger.error(f"Error in {operation_name}: {str(e)}")
+            st.error(f"An error occurred during {operation_name}")
+            raise
 
 def render_workload_analysis():
     try:

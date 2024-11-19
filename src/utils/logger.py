@@ -1,67 +1,40 @@
+"""Centralized logging configuration."""
 import logging
 import os
 from datetime import datetime
-from typing import Optional, Union
+from typing import Optional
 
-import pandas as pd
+# Create logs directory if it doesn't exist
+os.makedirs("logs", exist_ok=True)
 
-
-class CustomLogger(logging.Logger):
-    def __init__(self, name: str) -> None:
-        super().__init__(name)
+def setup_logger(name: str) -> logging.Logger:
+    """Configure and return a logger instance."""
+    logger = logging.getLogger(name)
+    
+    # Only add handlers if they don't exist
+    if not logger.handlers:
+        # Configure logging format and handlers
+        formatter = logging.Formatter(
+            "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+        )
         
-    def data_validation(self, msg: str, data: Optional[pd.DataFrame] = None) -> None:
-        """Custom method for data validation logging."""
-        if data is not None and isinstance(data, pd.DataFrame):
-            msg = f"{msg}\nData Shape: {data.shape}\nColumns: {data.columns.tolist()}"
-        self.info(msg)
-
-
-def setup_logger() -> logging.Logger:
-    """
-    Configure and return a logger instance for the application.
-
-    Returns:
-        logging.Logger: Configured logger instance
-    """
-    # Create logs directory if it doesn't exist
-    if not os.path.exists("logs"):
-        os.makedirs("logs")
-
-    # Configure logging with more detailed format
-    log_filename = f'logs/dashboard_{datetime.now().strftime("%Y%m%d")}.log'
-
-    # Create file handler
-    file_handler = logging.FileHandler(log_filename)
-    file_handler.setLevel(logging.INFO)
-
-    # Create console handler
-    console_handler = logging.StreamHandler()
-    console_handler.setLevel(logging.INFO)
-
-    # Create formatter
-    formatter = logging.Formatter(
-        "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-    )
-    file_handler.setFormatter(formatter)
-    console_handler.setFormatter(formatter)
-
-    # Get logger
-    logger = CustomLogger(__name__)
-    logger.setLevel(logging.INFO)
-
-    # Add handlers
-    logger.addHandler(file_handler)
-    logger.addHandler(console_handler)
-
-    # Add data validation logging
-    logger.data_validation = logger.data_validation
-
+        # File handler
+        log_file = f'logs/dashboard_{datetime.now().strftime("%Y%m%d")}.log'
+        file_handler = logging.FileHandler(log_file)
+        file_handler.setLevel(logging.DEBUG)
+        file_handler.setFormatter(formatter)
+        
+        # Console handler
+        console_handler = logging.StreamHandler()
+        console_handler.setLevel(logging.INFO)
+        console_handler.setFormatter(formatter)
+        
+        # Add handlers to logger
+        logger.addHandler(file_handler)
+        logger.addHandler(console_handler)
+        logger.setLevel(logging.DEBUG)
+    
     return logger
 
-
-# Create logger instance
-logger = setup_logger()
-
-# Export logger
-__all__ = ["logger"]
+# Create default logger instance
+logger = setup_logger("jira_dashboard")

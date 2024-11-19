@@ -39,11 +39,17 @@ def render_sprint_metrics() -> None:
                 "Select Sprint",
                 options=sprint_data["Sprint"].unique()
             )
+        
+        # Create burndown data for selected sprint
+        burndown_data = sprint_data[sprint_data["Sprint"] == selected_sprint].copy()
+        burndown_data["Remaining Points"] = burndown_data["Story Points"].cumsum()
+        burndown_data["Ideal Burndown"] = burndown_data["Story Points"].iloc[0] - \
+            (burndown_data["Story Points"].iloc[0] / len(burndown_data.index)) * \
+            range(len(burndown_data.index))
             
-        burndown_data = sprint_data[sprint_data["Sprint"] == selected_sprint]
         fig_burndown = px.line(
             burndown_data,
-            x="Date",
+            x=burndown_data.index,
             y=["Remaining Points", "Ideal Burndown"],
             title=f"Burndown Chart - {selected_sprint}"
         )
@@ -51,8 +57,10 @@ def render_sprint_metrics() -> None:
         
     except DataProcessingError as e:
         logger.error("Data processing error: %s", str(e))
+        st.error("Error processing data. Please check the data format.")
     except Exception as e:
         logger.error("Unexpected error in sprint metrics: %s", str(e))
+        st.error("An unexpected error occurred. Please try again.")
 
 if __name__ == "__main__":
     render_sprint_metrics() 

@@ -3,8 +3,8 @@ from contextlib import contextmanager
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Type, Generator, Iterator
 
-from utils.logger import logger
-
+from src.utils.logger import logger
+import pandas as pd
 
 class ErrorHandler:
     """Class for handling errors and monitoring application health."""
@@ -12,6 +12,7 @@ class ErrorHandler:
     def __init__(self) -> None:
         self.recovery_attempts: int = 0
         self.backoff_times: List[datetime] = []
+        self.logger = logger
 
     @contextmanager
     def handle_operation(self, operation_name: str) -> Generator[None, None, None]:
@@ -51,33 +52,11 @@ class ErrorHandler:
     def _recover_data_corruption(self, component, error):
         pass
 
-    @staticmethod
-    def handle_error(error_msg: str):
-        """Handle errors by logging them and taking appropriate action"""
-        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-        # Configure logging
-        logging.basicConfig(
-            filename="logs/app.log",
-            level=logging.ERROR,
-            format="%(asctime)s - %(levelname)s - %(message)s",
-            force=True,  # Ensure configuration is applied
-        )
-
-        # Create detailed error message
-        detailed_msg = f"""
-        Error Details:
-        Timestamp: {timestamp}
-        Message: {error_msg}
-        """
-
-        # Log the error
-        logging.error(detailed_msg)
-
-        # Print to console for immediate visibility
-        print(f"[{timestamp}] ERROR: {error_msg}")
-
-        return False
+    def handle_error(self, error, context=""):
+        """Handle errors and log them appropriately"""
+        error_message = f"{context}: {str(error)}" if context else str(error)
+        self.logger.error(error_message)
+        return error_message
 
     @classmethod
     def monitor_visualization(cls, viz_method):
@@ -109,3 +88,42 @@ class ErrorHandler:
             logger.error(error_msg)
             return False
         return True
+
+    @staticmethod
+    def check_data_quality(df: pd.DataFrame) -> bool:
+        """Check data quality and completeness."""
+        try:
+            # Check for minimum required rows
+            if len(df) < 1:
+                logger.error("Empty dataset")
+                return False
+            
+            # Check for invalid story points
+            invalid_points = df[
+                (df['Story Points'].notna()) & 
+                (df['Story Points'] < 0)
+            ].shape[0]
+            if invalid_points > 0:
+                logger.warning(f"Found {invalid_points} rows with invalid story points")
+            
+            # Check for future created dates
+            future_dates = df[
+                df['Created'] > pd.Timestamp.now()
+            ].shape[0]
+            if future_dates > 0:
+                logger.warning(f"Found {future_dates} rows with future created dates")
+            
+            # Check for invalid date ranges
+            invalid_dates = df[
+                (df['Due Date'].notna()) & 
+                (df['Created'].notna()) & 
+                (df['Due Date'] < df['Created'])
+            ].shape[0]
+            if invalid_dates > 0:
+                logger.warning(f"Found {invalid_dates} rows with due date before created date")
+            
+            return True
+        
+        except Exception as e:
+            logger.error(f"Error in data quality check: {str(e)}")
+            return False

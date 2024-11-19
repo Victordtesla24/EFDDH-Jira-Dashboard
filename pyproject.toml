@@ -1,28 +1,12 @@
-[tool.poetry]
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
 name = "efddh-dashboard"
 version = "0.1.0"
 description = "EFDDH Jira Dashboard"
-authors = ["Your Name <your.email@example.com>"]
+requires-python = ">=3.9,<3.12"
 
-[tool.poetry.dependencies]
-python = "^3.9"
-streamlit = "^1.31.0"
-pandas = "^2.0.0"
-plotly = "^5.18.0"
-
-[tool.mypy]
-python_version = "3.9"
-strict = true
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = [
-    "streamlit.*",
-    "pandas.*",
-    "plotly.*"
-]
-ignore_missing_imports = true
-
-[build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+[tool.setuptools]
+packages = ["src"]

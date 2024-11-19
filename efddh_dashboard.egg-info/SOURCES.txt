@@ -1,0 +1,8 @@
+README.md
+pyproject.toml
+setup.py
+efddh_dashboard.egg-info/PKG-INFO
+efddh_dashboard.egg-info/SOURCES.txt
+efddh_dashboard.egg-info/dependency_links.txt
+efddh_dashboard.egg-info/top_level.txt
+src/__init__.py
