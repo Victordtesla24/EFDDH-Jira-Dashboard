@@ -1,15 +1,12 @@
-"""Root package initialization."""
+"""Main package initialization."""
 
-# Import core utilities first
-from .utils import ErrorHandler, logger, DataProcessor
-
-# Then import visualizations that depend on utils
-from .visualizations import create_program_overview, create_program_charts
+from .utils import DataProcessor, ErrorHandler, logger
+from .visualizations import create_program_charts, create_program_overview
 
 __all__ = [
+    "DataProcessor",
     "ErrorHandler",
     "logger",
-    "DataProcessor",
+    "create_program_charts",
     "create_program_overview",
-    "create_program_charts"
 ]

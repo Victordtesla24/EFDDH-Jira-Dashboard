@@ -1,0 +1,43 @@
+"""Main dashboard page."""
+
+import pandas as pd
+import streamlit as st
+
+from src.metrics.metrics_calculator import MetricsCalculator
+from src.visualizations.program_charts import Visualizer
+
+st.set_page_config(page_title="JIRA Dashboard", page_icon="📊", layout="wide")
+
+
+def main():
+    """Run the main dashboard."""
+    st.title("JIRA Program Dashboard")
+    st.sidebar.success("Select a page above.")
+
+    # Load and store data in session state
+    if "data" not in st.session_state:
+        try:
+            data = pd.read_csv("data/test_EFDDH-Jira-Data-All.csv")
+            st.session_state.data = data
+            st.session_state.calculator = MetricsCalculator(data)
+            st.session_state.visualizer = Visualizer(data)
+        except Exception as e:
+            st.error(f"Error loading data: {e}")
+            return
+
+    # Display welcome message
+    st.markdown(
+        """
+    ## Welcome to the JIRA Program Dashboard
+
+    Select a page from the sidebar to view different metrics:
+    - **Program Overview**: High-level program metrics
+    - **Sprint Metrics**: Sprint velocity and burndown
+    - **Epic Tracking**: Epic progress and status
+    - **Team Analysis**: Team workload and performance
+    """
+    )
+
+
+if __name__ == "__main__":
+    main()

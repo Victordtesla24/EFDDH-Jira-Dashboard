@@ -1,5 +1,8 @@
 Metadata-Version: 2.1
 Name: efddh-dashboard
 Version: 0.1.0
-Summary: EFDDH Jira Dashboard
+Summary: JIRA Dashboard for EFDDH Program
 Requires-Python: >=3.9
+Requires-Dist: pandas>=2.0.0
+Requires-Dist: plotly>=5.18.0
+Requires-Dist: streamlit>=1.29.0

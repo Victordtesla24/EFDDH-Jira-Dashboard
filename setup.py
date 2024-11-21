@@ -1,14 +1,16 @@
-from setuptools import setup, find_packages
+"""Setup script for backward compatibility."""
+
+from setuptools import find_packages, setup
 
 setup(
-    name="efddh-dashboard",
+    name="jira-dashboard",
     version="0.1.0",
     packages=find_packages(),
     install_requires=[
-        "streamlit>=1.28.0",
-        "pandas>=2.0.0",
-        "numpy>=1.24.0",
-        "plotly>=5.13.0",
+        "streamlit",
+        "pandas",
+        "plotly",
+        "setuptools",
     ],
-     python_requires=">=3.9",
+    python_requires=">=3.8",
 )

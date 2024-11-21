@@ -1,5 +1,5 @@
 """Service modules for external integrations."""
 
-from .jira.connection_manager import JiraConnectionManager
+from .jira.connection_manager import ConnectionManager
 
-__all__ = ['JiraConnectionManager']
+__all__ = ["ConnectionManager"]

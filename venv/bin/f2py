@@ -1,4 +1,4 @@
-#!/Users/vicd/cursor-tutor/EFDDH-Jira-Dashboard/venv/bin/python3.9
+#!/Users/vicd/cursor-tutor/EFDDH-Jira-Dashboard/venv/bin/python3.13
 # -*- coding: utf-8 -*-
 import re
 import sys

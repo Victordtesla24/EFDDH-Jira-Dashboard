@@ -1,66 +1,47 @@
-import streamlit as st
-import plotly.express as px
-from src.utils.logger import logger
-from src.utils.error_handler import ErrorHandler
-from src.utils.data_processor import process_sprint_data
-from Home import load_data
-from typing import Union, Optional
-from src.utils.custom_exceptions import DataProcessingError
+"""Sprint metrics page."""
 
-def render_sprint_metrics() -> None:
-    """Render sprint metrics dashboard."""
+import streamlit as st
+from streamlit.logger import get_logger
+
+# Initialize logger
+logger = get_logger(__name__)
+
+st.set_page_config(page_title="Sprint Metrics", page_icon="🏃", layout="wide")
+
+
+def main():
+    """Display sprint metrics."""
     try:
-        st.title("Sprint Metrics 🏃")
-        
-        # Load and process data
-        with ErrorHandler().handle_operation("data_loading"):
-            df = load_data()
-            if df is None:
-                return
-            
-            sprint_data = process_sprint_data(df)
-            
-        # Sprint Velocity Chart
-        st.subheader("Sprint Velocity")
-        fig_velocity = px.line(
-            sprint_data, 
-            x="Sprint", 
-            y="Story Points",
-            title="Sprint Velocity Trend"
-        )
-        st.plotly_chart(fig_velocity, use_container_width=True)
-        
-        # Sprint Burndown
-        st.subheader("Sprint Burndown")
+        st.title("Sprint Metrics")
+
+        if "data" not in st.session_state or "calculator" not in st.session_state:
+            st.error("Please load data from the Home page first")
+            return
+
+        # Get sprint metrics
+        metrics = st.session_state.calculator.get_sprint_metrics()
+
+        # Display sprint KPIs
         col1, col2 = st.columns(2)
-        
         with col1:
-            selected_sprint = st.selectbox(
-                "Select Sprint",
-                options=sprint_data["Sprint"].unique()
-            )
-        
-        # Create burndown data for selected sprint
-        burndown_data = sprint_data[sprint_data["Sprint"] == selected_sprint].copy()
-        burndown_data["Remaining Points"] = burndown_data["Story Points"].cumsum()
-        burndown_data["Ideal Burndown"] = burndown_data["Story Points"].iloc[0] - \
-            (burndown_data["Story Points"].iloc[0] / len(burndown_data.index)) * \
-            range(len(burndown_data.index))
-            
-        fig_burndown = px.line(
-            burndown_data,
-            x=burndown_data.index,
-            y=["Remaining Points", "Ideal Burndown"],
-            title=f"Burndown Chart - {selected_sprint}"
+            st.metric("Average Velocity", f"{metrics['average_velocity']:.1f}")
+        with col2:
+            st.metric("Sprint Completion Rate", f"{metrics['completion_rate']:.1%}")
+
+        # Display sprint charts
+        st.plotly_chart(
+            st.session_state.visualizer.create_sprint_velocity(),
+            use_container_width=True,
         )
-        st.plotly_chart(fig_burndown, use_container_width=True)
-        
-    except DataProcessingError as e:
-        logger.error("Data processing error: %s", str(e))
-        st.error("Error processing data. Please check the data format.")
+        st.plotly_chart(
+            st.session_state.visualizer.create_sprint_burndown(),
+            use_container_width=True,
+        )
     except Exception as e:
-        logger.error("Unexpected error in sprint metrics: %s", str(e))
-        st.error("An unexpected error occurred. Please try again.")
+        error_msg = f"Error processing sprint metrics: {str(e)}"
+        logger.error(error_msg)
+        st.error(error_msg)
+
 
 if __name__ == "__main__":
-    render_sprint_metrics() 
+    main()

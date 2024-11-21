@@ -1,89 +1,64 @@
+"""Epic tracking page."""
+
 import streamlit as st
-import plotly.express as px
-import pandas as pd
-from src.utils.logger import logger
-from src.utils.error_handler import ErrorHandler
-from src.utils.data_processor import process_epic_data
-from Home import load_data
+from streamlit.logger import get_logger
 
-def render_epic_tracking():
+# Initialize logger
+logger = get_logger(__name__)
+
+st.set_page_config(page_title="Epic Tracking", page_icon="🎯", layout="wide")
+
+
+def main():
+    """Display epic tracking metrics."""
     try:
-        st.title("Epic Tracking 🎯")
-        
-        # Load and process data
-        with ErrorHandler().handle_operation("data_loading"):
-            df = load_data()
-            if df is None:
-                st.warning("Please upload data first")
-                return
-            
-            epic_data = process_epic_data(df)
-            if epic_data.empty:
-                st.warning("No epic data available")
-                return
+        st.title("Epic Tracking")
 
-        # Create progress data
-        progress_data = []
-        for _, row in epic_data.iterrows():
-            status_counts = row['Status']
-            progress_data.append({
-                'Epic': row['Epic'],
-                'To Do': status_counts.get('To Do', 0),
-                'In Progress': status_counts.get('In Progress', 0),
-                'Done': status_counts.get('Done', 0)
-            })
-            
-        progress_df = pd.DataFrame(progress_data)
-        
-        # Epic Progress Overview
-        st.subheader("Epic Progress")
-        
-        if not progress_df.empty:
-            fig = px.bar(
-                progress_df,
-                x='Epic',
-                y=['To Do', 'In Progress', 'Done'],
-                title="Epic Progress Overview",
-                barmode="stack",
-                color_discrete_map={
-                    'To Do': '#95a5a6',
-                    'In Progress': '#3498db',
-                    'Done': '#2ecc71'
-                }
+        if "data" not in st.session_state or "calculator" not in st.session_state:
+            st.error("Please load data from the Home page first")
+            return
+
+        data = st.session_state.data
+        calculator = st.session_state.calculator
+
+        # Check for Epic column
+        epic_column = next(
+            (col for col in data.columns if col.lower() in ["epic", "epic link"]), None
+        )
+        if not epic_column:
+            st.error(
+                "Epic data not found. Please ensure your data includes an Epic or Epic Link column."
             )
-            
-            fig.update_layout(
-                xaxis_title="Epic",
-                yaxis_title="Number of Issues",
-                legend_title="Status",
-                height=400
-            )
-            
-            st.plotly_chart(fig, use_container_width=True)
-            
-            # Epic Details
-            st.subheader("Epic Details")
-            selected_epic = st.selectbox(
-                "Select Epic",
-                options=epic_data['Epic'].unique()
-            )
-            
-            epic_details = epic_data[epic_data['Epic'] == selected_epic].iloc[0]
-            
-            col1, col2, col3 = st.columns(3)
-            with col1:
-                st.metric("Completion Rate", 
-                         f"{epic_details['Completion Rate']:.1%}")
-            with col2:
-                st.metric("Total Issues", 
-                         int(epic_details['Total Issues']))
-            with col3:
-                st.metric("Done Issues", 
-                         int(epic_details['Done Issues']))
-                
+            return
+
+        # Get epic metrics
+        metrics = {
+            "total_epics": len(data[epic_column].unique()),
+            "avg_completion": calculator.get_basic_metrics()["completion_rate"],
+        }
+
+        # Display epic KPIs
+        col1, col2 = st.columns(2)
+        with col1:
+            st.metric("Total Epics", metrics["total_epics"])
+        with col2:
+            st.metric("Average Completion", f"{metrics['avg_completion']:.1%}")
+
+        # Display epic charts
+        st.plotly_chart(
+            st.session_state.visualizer.create_epic_progress(epic_column),
+            use_container_width=True,
+        )
+        st.plotly_chart(
+            st.session_state.visualizer.create_epic_status(epic_column),
+            use_container_width=True,
+        )
+
     except Exception as e:
-        logger.error(f"Error in epic tracking: {str(e)}")
-        st.error("An error occurred while rendering epic tracking.")
+        error_msg = f"Error in epic tracking: {str(e)}"
+        logger.error(error_msg)
+        st.error(error_msg)
+
 
 if __name__ == "__main__":
-    render_epic_tracking() 
+    main()

@@ -4,20 +4,36 @@ import sys
 from datetime import datetime
 
 
-def setup_logging():
+class LogConfig:
+    """Configuration class for logging settings."""
+
+    LOG_DIR = "logs"
+    LOG_FORMAT = "%(asctime)s [%(levelname)s] %(message)s"
+    LOG_LEVEL = logging.INFO
+
+
+def configure_logging():
+    """Configure logging with file and console handlers."""
     # Ensure logs directory exists
-    log_dir = "logs"
-    if not os.path.exists(log_dir):
-        os.makedirs(log_dir)
+    if not os.path.exists(LogConfig.LOG_DIR):
+        os.makedirs(LogConfig.LOG_DIR)
 
     # Configure logging
     logging.basicConfig(
-        level=logging.INFO,
-        format="%(asctime)s [%(levelname)s] %(message)s",
+        level=LogConfig.LOG_LEVEL,
+        format=LogConfig.LOG_FORMAT,
         handlers=[
             logging.StreamHandler(sys.stdout),
             logging.FileHandler(
-                os.path.join(log_dir, f'app_{datetime.now().strftime("%Y%m%d")}.log')
+                os.path.join(
+                    LogConfig.LOG_DIR, f'app_{datetime.now().strftime("%Y%m%d")}.log'
+                )
             ),
         ],
     )
+
+
+__all__ = [
+    "configure_logging",
+    "LogConfig",
+]

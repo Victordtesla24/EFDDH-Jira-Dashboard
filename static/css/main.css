@@ -1,0 +1,220 @@
+/* Main Layout */
+.main {
+    padding: 1rem;
+}
+
+/* Custom Streamlit Elements */
+.stButton > button {
+    width: 100%;
+    border-radius: 5px;
+    background-color: #1f77b4;
+    color: white;
+}
+
+.stButton > button:hover {
+    background-color: #135c8d;
+    border-color: #135c8d;
+}
+
+/* Metrics Styling */
+.metric-container {
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    padding: 1rem;
+    margin: 0.5rem 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.metric-label {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 0.25rem;
+}
+
+.metric-value {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #1f77b4;
+}
+
+/* Chart Containers */
+.chart-container {
+    background-color: white;
+    border-radius: 5px;
+    padding: 1rem;
+    margin: 1rem 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Status Colors */
+.status-todo {
+    color: #ff9f1c;
+}
+
+.status-in-progress {
+    color: #2ec4b6;
+}
+
+.status-done {
+    color: #4caf50;
+}
+
+.status-blocked {
+    color: #f44336;
+}
+
+/* Priority Colors */
+.priority-high {
+    color: #ff4b4b;
+}
+
+.priority-medium {
+    color: #ffb84d;
+}
+
+.priority-low {
+    color: #36b37e;
+}
+
+/* Custom Sidebar */
+.sidebar .sidebar-content {
+    background-color: #f8f9fa;
+}
+
+/* Custom Headers */
+h1, h2, h3 {
+    color: #2c3e50;
+    margin-bottom: 1rem;
+}
+
+/* Error Messages */
+.error-message {
+    background-color: #ffebee;
+    color: #c62828;
+    padding: 1rem;
+    border-radius: 5px;
+    margin: 1rem 0;
+}
+
+/* Warning Messages */
+.warning-message {
+    background-color: #fff3e0;
+    color: #ef6c00;
+    padding: 1rem;
+    border-radius: 5px;
+    margin: 1rem 0;
+}
+
+/* Success Messages */
+.success-message {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+    padding: 1rem;
+    border-radius: 5px;
+    margin: 1rem 0;
+}
+
+/* Loading Spinner */
+.loading-spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    .metric-container {
+        margin: 0.25rem 0;
+    }
+
+    .metric-value {
+        font-size: 1.25rem;
+    }
+
+    .chart-container {
+        margin: 0.5rem 0;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .sidebar {
+        display: none;
+    }
+
+    .main {
+        padding: 0;
+    }
+
+    .chart-container {
+        break-inside: avoid;
+    }
+}
+/* Dashboard styling */
+.stApp {
+    max-width: 1200px;
+    margin: 0 auto;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+/* Metrics styling */
+div[data-testid="stMetric"] {
+    background-color: #FFFFFF;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+}
+
+div[data-testid="stMetricValue"] {
+    font-size: 1.8rem !important;
+    font-weight: bold;
+    color: #2980B9;
+}
+
+div[data-testid="stMetricLabel"] {
+    font-size: 1rem;
+    color: #7F8C8D;
+}
+
+/* Chart containers */
+div[data-testid="stPlotlyChart"] {
+    background-color: #FFFFFF;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+    margin-bottom: 2rem;
+}
+
+/* Headers */
+h1, h2, h3 {
+    color: #2C3E50;
+    font-weight: 600;
+}
+
+/* Sidebar */
+section[data-testid="stSidebar"] {
+    background-color: #F8F9FA;
+    padding: 2rem 1rem;
+}
+
+section[data-testid="stSidebar"] .stTitle {
+    color: #2C3E50;
+    font-weight: 600;
+    margin-bottom: 2rem;
+}
+
+/* File uploader */
+div[data-testid="stFileUploader"] {
+    background-color: #FFFFFF;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+/* Messages */
+div[data-testid="stAlert"] {
+    border-radius: 0.5rem;
+    margin: 1rem 0;
+    padding: 1rem;
+}

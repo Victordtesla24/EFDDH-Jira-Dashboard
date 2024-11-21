@@ -1,5 +1,5 @@
-"""Data processing and management modules."""
+"""Data processing modules."""
 
-from .processors import DataProcessor
+from src.utils.data_processor import DataProcessor
 
-__all__ = ['DataProcessor']
+__all__ = ["DataProcessor"]
